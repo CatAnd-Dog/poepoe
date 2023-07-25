@@ -3,7 +3,7 @@
 ### 使用方法
 
 ``` 
-git clone         
+git clone   https://github.com/CatAnd-Dog/poepoe.git     
 ```
 
 ```  cd  poepoe  ``` ```  vi config.py  ``` 修改配置文件

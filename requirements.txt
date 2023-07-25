@@ -1,0 +1,4 @@
+Flask==2.3.2
+Flask_Cors==4.0.0
+poe_api==0.4.17
+quickjs==1.19.2

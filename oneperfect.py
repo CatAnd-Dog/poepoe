@@ -1,4 +1,5 @@
 import poebiubiubiu
+
 from flask import Flask, request, jsonify, Response, make_response, stream_with_context
 import random
 from flask_cors import CORS
@@ -29,14 +30,11 @@ def get_client():
             pass
 
 get_client()
-
-
-
-
 # 如果有失效的，则更新poe连接
 def update_client(i):
     global client_all
     max_attempts = 5
+
     for attempt in range(max_attempts):
         try:
             client_all[i] = poebiubiubiu.cc(poe_ck[i][0],poe_ck[i][1])
@@ -98,7 +96,8 @@ def send_message():
                 update_client(ck)
                 response_content["choices"][0]["delta"]["content"] = "请联系站长或重试"
                 yield f'data: {json.dumps(response_content)}\n\n'
-        yield 'data: {"choices": [{"delta": {"content": "[DONE]"}}]}\n\n'
+            yield 'data: {"choices": [{"delta": {"content": "[DONE]"}}]}\n\n'
+
         response = Response(stream_with_context(generate()), content_type='text/event-stream')
         return response
 

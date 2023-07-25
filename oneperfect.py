@@ -24,8 +24,11 @@ poe_apikey=config.poe_apikey    # poe验证
 # 初始化读取ck,连接poe
 def get_client():
     for ck in poe_ck:
-        client = poebiubiubiu.cc(ck[0],ck[1])
-        client_all[ck[0]] = client
+        try:
+            client = poebiubiubiu.cc(ck[0],ck[1])
+            client_all[ck[0]] = client
+        except:
+            pass
 
 get_client()
 # 如果有失效的，则更新poe连接
@@ -33,8 +36,6 @@ def update_client(ck):
     global client_all
     try:  # 先尝试重连
         client_all[ck] = poe.Client(ck)
-        for chunk in client_all[ck].send_message("beaver", "hello", with_chat_break=True):
-            print(chunk["text_new"], end="", flush=True)
     except:
         del client_all[ck]  # 删除失效的连接
 
@@ -82,15 +83,17 @@ def send_message():
                 for chunk in client.send_message(model, str(message), with_chat_break=True, async_recv=False):
                     response_content["choices"][0]["delta"]["content"] = chunk["text_new"]
                     yield f'data: {json.dumps(response_content)}\n\n'
-                yield 'data: {"choices": [{"delta": {"content": "[DONE]"}}]}\n\n'
+
             except:
                 update_client(ck)
-
+            response_content["choices"][0]["delta"]["content"] = str(ck)
+            yield f'data: {json.dumps(response_content)}\n\n'
+            yield 'data: {"choices": [{"delta": {"content": "[DONE]"}}]}\n\n'
         response = Response(stream_with_context(generate()), content_type='text/event-stream')
         return response
 
     else:
-        return "error"
+        return str(len(client_all))
 
 
 

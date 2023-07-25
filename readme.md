@@ -12,7 +12,7 @@ git clone   https://github.com/CatAnd-Dog/poepoe.git
 docker build -t oppoe:latest .
 ```
 ``` 
-docker run -p 47124:47124  -v /root/config.py:config.py  -d oppoe:latest
+docker run -p 47124:47124  -v /root/poepoe/config.py:config.py  -d oppoe:latest
 ```
 使用
 

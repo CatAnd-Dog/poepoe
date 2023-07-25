@@ -1,11 +1,9 @@
 import poebiubiubiu
-
 from flask import Flask, request, jsonify, Response, make_response, stream_with_context
 import random
 from flask_cors import CORS
 import json
 import time
-import poe
 import config
 
 
@@ -23,21 +21,33 @@ poe_apikey=config.poe_apikey    # poe验证
 
 # 初始化读取ck,连接poe
 def get_client():
-    for ck in poe_ck:
+    for i in range(len(poe_ck)):
         try:
-            client = poebiubiubiu.cc(ck[0],ck[1])
-            client_all[ck[0]] = client
+            client = poebiubiubiu.cc(poe_ck[i][0],poe_ck[i][1])
+            client_all[i] = client
         except:
             pass
 
 get_client()
+
+
+
+
 # 如果有失效的，则更新poe连接
-def update_client(ck):
+def update_client(i):
     global client_all
-    try:  # 先尝试重连
-        client_all[ck] = poe.Client(ck)
-    except:
-        del client_all[ck]  # 删除失效的连接
+    max_attempts = 5
+    for attempt in range(max_attempts):
+        try:
+            client_all[i] = poebiubiubiu.cc(poe_ck[i][0],poe_ck[i][1])
+            return  # 如果连接成功，立即返回，不执行下面的代码
+        except Exception as e:
+            print(f"Attempt {attempt + 1} to connect failed: {e}")
+            if attempt < max_attempts - 1:  # 如果这不是最后一次尝试，那么等待一会儿再试
+                time.sleep(2)
+            else:  # 如果这是最后一次尝试，那么删除失效的连接
+                del client_all[i]
+                print(f"Failed to connect after {max_attempts} attempts, connection {i} removed.")
 
 
 # 构造回复
@@ -86,9 +96,9 @@ def send_message():
 
             except:
                 update_client(ck)
-            response_content["choices"][0]["delta"]["content"] = str(ck)
-            yield f'data: {json.dumps(response_content)}\n\n'
-            yield 'data: {"choices": [{"delta": {"content": "[DONE]"}}]}\n\n'
+                response_content["choices"][0]["delta"]["content"] = "请联系站长或重试"
+                yield f'data: {json.dumps(response_content)}\n\n'
+        yield 'data: {"choices": [{"delta": {"content": "[DONE]"}}]}\n\n'
         response = Response(stream_with_context(generate()), content_type='text/event-stream')
         return response
 

@@ -27,3 +27,14 @@ docker run -p 47124:47124  -v /root/config.py:config.py  -d oppoe:latest
 模型名为config文件中poe_bot的模型名。
 
 4、apikey：填写config文件中poe_apikey。默认为sk-x1OQLM4bQYx8tT3BlbkFJuev
+
+### 说明
+配置文件的poe_ck 是一个二维数组
+poe_ck=[["pb-1","formkey-1"],
+        ["pb-2","formkey-2"],
+        ["pb-3","formkey-3"]]
+可以填写多个poe账号信息。 获取途径，登陆poe账号。
+
+Browser Devtools -> Network -> Receive POST -> Copy the value of the "poe-formkey"
+
+pb值再cookie里面抓取

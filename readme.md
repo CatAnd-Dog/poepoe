@@ -1,4 +1,10 @@
 # poe逆向
+后面会合并到这个仓库。
+
+https://github.com/CatAnd-Dog/chatgptplugin
+
+该仓库拥有联网、画图、文心一言、在线听歌/看电影、
+
 
 ### 使用方法
 
@@ -12,7 +18,7 @@ git clone   https://github.com/CatAnd-Dog/poepoe.git
 docker build -t oppoe:latest .
 ```
 ``` 
-docker run -p 47124:47124  -v /root/poepoe/config.py:config.py  -d oppoe:latest
+docker run -p 47124:47124  -v /root/poepoe/config.py:/app/config.py  -d oppoe:latest
 ```
 使用
 
@@ -33,8 +39,11 @@ docker run -p 47124:47124  -v /root/poepoe/config.py:config.py  -d oppoe:latest
 poe_ck=[["pb-1","formkey-1"],
         ["pb-2","formkey-2"],
         ["pb-3","formkey-3"]]
-可以填写多个poe账号信息。 获取途径，登陆poe账号。
+可以填写多个poe账号信息。 获取途径，登陆poe账号。仔细看，不仔细看的别找我。
 
 Browser Devtools -> Network -> Receive POST -> Copy the value of the "poe-formkey"
 
 pb值再cookie里面抓取
+
+### 项目参考
+大佬：https://github.com/ading2210/poe-api
